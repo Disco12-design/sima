@@ -5,7 +5,7 @@
        wherever the card shows [HER NAME] or [YOUR NAME].
    ===================================================================== */
 const CONFIG = {
-  herName: "Sima",   // shown on the envelope ("For Sima")
+  herName: "Baby Love",   // shown on the envelope ("For Sima")
   yourName: "Venus", // shown in the signature
 };
 

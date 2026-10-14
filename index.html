@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#3d0a18">
+  <title>A card for Sima</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==========================================================
+       ROSE ARTWORK (shared drawing, reused in every rose spot)
+       To use your OWN rose picture instead, see the note in
+       style.css under "ROSES". Every rose spot below looks like:
+         <div class="rose ..."><svg ...><use href="#rose-art"/></svg></div>
+       Replace the <svg> line with:  <img src="rose.png" alt="">
+       ========================================================== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="rg-outer" cx="50%" cy="45%" r="60%">
+        <stop offset="0" stop-color="#c8203f"/>
+        <stop offset=".7" stop-color="#9c0f2b"/>
+        <stop offset="1" stop-color="#6b0719"/>
+      </radialGradient>
+      <radialGradient id="rg-mid" cx="50%" cy="40%" r="65%">
+        <stop offset="0" stop-color="#e5465f"/>
+        <stop offset="1" stop-color="#a81232"/>
+      </radialGradient>
+      <radialGradient id="rg-inner" cx="50%" cy="45%" r="60%">
+        <stop offset="0" stop-color="#d9304e"/>
+        <stop offset="1" stop-color="#8a0c25"/>
+      </radialGradient>
+      <linearGradient id="leaf-grad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#437f49"/>
+        <stop offset="1" stop-color="#1f4a2a"/>
+      </linearGradient>
+
+      <symbol id="rose-art" viewBox="0 0 200 200">
+        <!-- leaves -->
+        <path d="M100 112 C58 128 20 118 8 82 C46 70 88 84 100 112Z" fill="url(#leaf-grad)"/>
+        <path d="M100 112 C142 128 180 118 192 82 C154 70 112 84 100 112Z" fill="url(#leaf-grad)"/>
+        <path d="M100 130 C70 150 66 184 100 196 C134 184 130 150 100 130Z" fill="url(#leaf-grad)"/>
+        <path d="M100 112 C70 112 40 104 14 86 M100 112 C130 112 160 104 186 86 M100 134 L100 190"
+              fill="none" stroke="#a9d6a8" stroke-opacity=".35" stroke-width="1.5" stroke-linecap="round"/>
+
+        <!-- outer petals -->
+        <g fill="url(#rg-outer)" stroke="#5a0615" stroke-opacity=".5" stroke-width="1.2">
+          <ellipse cx="100" cy="62" rx="32" ry="40"/>
+          <ellipse cx="100" cy="62" rx="32" ry="40" transform="rotate(72 100 100)"/>
+          <ellipse cx="100" cy="62" rx="32" ry="40" transform="rotate(144 100 100)"/>
+          <ellipse cx="100" cy="62" rx="32" ry="40" transform="rotate(216 100 100)"/>
+          <ellipse cx="100" cy="62" rx="32" ry="40" transform="rotate(288 100 100)"/>
+        </g>
+        <!-- middle petals -->
+        <g fill="url(#rg-mid)" stroke="#7a0b20" stroke-opacity=".5" stroke-width="1.1">
+          <ellipse cx="100" cy="74" rx="22" ry="28" transform="rotate(36 100 100)"/>
+          <ellipse cx="100" cy="74" rx="22" ry="28" transform="rotate(108 100 100)"/>
+          <ellipse cx="100" cy="74" rx="22" ry="28" transform="rotate(180 100 100)"/>
+          <ellipse cx="100" cy="74" rx="22" ry="28" transform="rotate(252 100 100)"/>
+          <ellipse cx="100" cy="74" rx="22" ry="28" transform="rotate(324 100 100)"/>
+        </g>
+        <!-- centre + spiral -->
+        <circle cx="100" cy="100" r="25" fill="url(#rg-inner)"/>
+        <path d="M100 100 m-2 0 a2 2 0 1 1 4 0 a6 6 0 1 1 -12 0 a10 10 0 1 1 20 0 a14 14 0 1 1 -28 0 a18 18 0 1 1 36 0"
+              fill="none" stroke="#5a0615" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/>
+        <!-- soft highlights -->
+        <g fill="#ffffff" opacity=".13">
+          <ellipse cx="82" cy="52" rx="12" ry="6" transform="rotate(-30 82 52)"/>
+          <ellipse cx="146" cy="84" rx="10" ry="5" transform="rotate(40 146 84)"/>
+          <ellipse cx="70" cy="128" rx="10" ry="5" transform="rotate(-50 70 128)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- Falling petals / floating hearts live in their own layers -->
+  <div class="petal-layer petal-layer--ambient" id="petalsAmbient" aria-hidden="true"></div>
+  <div class="petal-layer petal-layer--burst" id="petalsBurst" aria-hidden="true"></div>
+  <div class="hearts-layer" id="heartsLayer" aria-hidden="true"></div>
+
+  <main class="stage">
+
+    <!-- ======================= 1. THE CLOSED ENVELOPE ======================= -->
+    <section class="scene" id="scene" aria-label="A sealed envelope">
+      <p class="scene__title">Something from my heart, just for you ❤️</p>
+
+      <div class="envelope-wrap">
+        <div class="envelope" id="envelope">
+          <div class="env-back"></div>
+          <div class="env-letter" aria-hidden="true"></div>
+          <div class="env-pocket"></div>
+
+          <svg class="env-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="0,100 50,55 100,100"/>
+            <polyline class="gold" points="0,0 50,55 100,0"/>
+          </svg>
+
+          <div class="env-flap"></div>
+
+          <p class="env-to">For <span data-her-name>Sima</span></p>
+
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </div>
+
+          <button class="btn btn--open" id="openBtn" type="button" aria-label="Open your card">
+            Open Your Card <span aria-hidden="true">💌</span>
+          </button>
+        </div>
+
+        <div class="rose rose--env-left"  aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+        <div class="rose rose--env-right" aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+        <div class="rose rose--env-top"   aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+        <div class="rose rose--env-topleft" aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+        <div class="rose rose--env-bl2" aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+        <div class="rose rose--env-br2" aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+      </div>
+    </section>
+
+    <!-- ======================= 2. THE OPENED CARD ======================= -->
+    <section class="card-stage" id="cardStage" hidden>
+      <div class="card-frame">
+
+        <div class="rose rose--card-tr" aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+        <div class="rose rose--card-bl" aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+        <div class="rose rose--card-br" aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+        <div class="rose rose--card-tl" aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+        <div class="rose rose--card-bl2" aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+
+        <article class="card" id="card" aria-labelledby="cardTitle" tabindex="0">
+
+          <!-- ================= THE LETTER (edit your words here) ================= -->
+          <div class="letter" id="letter">
+            <h1 class="letter__greeting reveal" id="cardTitle" tabindex="-1">My Love <span aria-hidden="true">❤️</span></h1>
+
+            <p class="reveal">I know I have hurt you with the way I have treated you, and I am truly sorry.</p>
+
+            <p class="reveal">You didn't deserve the moments when I made you feel unappreciated, disrespected, or hurt. You deserve to be loved with patience, kindness, honesty, and respect, and I am sorry that my actions haven't always shown you that.</p>
+
+            <p class="reveal">I'm not writing this to make excuses or to ask you to forget what happened. I know that saying sorry doesn't automatically take away the pain I caused. I just want to take responsibility for my mistakes and let you know that I genuinely regret hurting you.</p>
+
+            <p class="reveal">You mean so much to me, baby, and it hurts knowing that I have been the reason for your tears or sadness. I should have treated your heart with more care.</p>
+
+            <p class="reveal">I know I cannot fix everything with one letter or a bunch of roses. What I can do is work on myself, learn from my mistakes, listen to you better, and show you through my actions that I want to become a better partner.</p>
+
+            <p class="reveal">I love you, and I am sorry for the times I made you feel anything less than valued and respected.</p>
+
+            <p class="reveal">I'm not asking you to forgive me before you're ready. I just hope that one day my actions will show you how serious I am about making things right.</p>
+
+            <p class="letter__closing reveal">I'm truly sorry, my love. <span aria-hidden="true">❤️</span></p>
+
+            <p class="letter__signoff reveal">
+              Forever sorry,<br>
+              <span class="letter__signature"><span data-your-name>Venus</span> <span aria-hidden="true">🌹</span></span>
+            </p>
+          </div>
+          <!-- ===================== END OF THE LETTER ===================== -->
+
+          <hr class="ornament reveal">
+
+          <p class="caption reveal">A little card, a few roses, and a sincere apology from my heart.</p>
+
+          <div class="actions">
+            <button class="btn btn--primary btn--small" id="replayBtn" type="button">
+              Read My Letter Again <span aria-hidden="true">💌</span>
+            </button>
+            <button class="btn btn--ghost btn--small" id="moreLoveBtn" type="button" aria-controls="moreLoveText">
+              A Little More Love <span aria-hidden="true">❤️</span>
+            </button>
+            <button class="btn btn--ghost btn--small" id="closeBtn" type="button">
+              Close the Card <span aria-hidden="true">🌹</span>
+            </button>
+          </div>
+
+          <div class="more-love" aria-live="polite">
+            <p class="more-love__text" id="moreLoveText" hidden>No matter how difficult things have been, I want to learn from my mistakes and treat you with the love and respect you deserve. I'm sorry, baby. ❤️</p>
+          </div>
+
+        </article>
+      </div>
+    </section>
+
+    <!-- ======================= 3. CARD CLOSED: ROSES COME FORWARD ======================= -->
+    <section class="rose-stage" id="roseStage" hidden aria-label="Roses for Sima">
+      <div class="bouquet" aria-hidden="true">
+      <div class="rose rose--b-tl" style="--rot:-8deg;--k:1;z-index:1"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+      <div class="rose rose--b-tr" style="--rot:8deg;--k:2;z-index:1"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+      <div class="rose rose--b-l" style="--rot:-18deg;--k:3;z-index:2"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+      <div class="rose rose--b-r" style="--rot:18deg;--k:4;z-index:2"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+      <div class="rose rose--b-bottom" style="--rot:0deg;--k:5;z-index:3"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+      <div class="rose rose--b-center" style="--rot:0deg;--k:0;z-index:4"><svg viewBox="0 0 200 200"><use href="#rose-art"/></svg></div>
+      </div>
+      <p class="rose-stage__text" id="roseText" tabindex="-1">These roses are for you, <span data-her-name>Sima</span>. <span aria-hidden="true">🌹</span></p>
+      <button class="btn btn--primary" id="reopenBtn" type="button">Open the Card Again <span aria-hidden="true">💌</span></button>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

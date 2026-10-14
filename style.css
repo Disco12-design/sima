@@ -1,0 +1,679 @@
+/* =====================================================================
+   APOLOGY CARD — style.css
+
+   QUICK CUSTOMISING
+   • COLOURS ........ change the values in :root just below.
+   • FONTS .......... --font-script (greeting/signature) and --font-serif
+                      (letter text). They use fonts already on the device,
+                      so nothing is downloaded.
+   • ROSES .......... see the "ROSES" section further down.
+   ===================================================================== */
+
+:root {
+  /* Burgundy */
+  --burgundy-900: #2a0610;
+  --burgundy-800: #3d0a18;
+  --burgundy-700: #5a1022;
+  --burgundy-600: #7a1a30;
+  /* Reds & pinks */
+  --rose-red: #b3122e;
+  --blush: #f6dfe0;
+  --blush-deep: #e8b4bb;
+  /* Paper & gold */
+  --cream: #fbf3e6;
+  --cream-deep: #f3e6d0;
+  --gold: #c9a35b;
+  --gold-soft: rgba(201, 163, 91, 0.55);
+  /* Text */
+  --ink: #4a2a2e;
+
+  /* Typography (system fonts, no downloads) */
+  --font-script: "Snell Roundhand", "Apple Chancery", "Segoe Script",
+                 "Lucida Handwriting", "Brush Script MT", "URW Chancery L", cursive;
+  --font-serif: "Palatino Linotype", "Book Antiqua", Palatino, Georgia,
+                "Times New Roman", serif;
+
+  /* Envelope size */
+  --env-w: min(440px, 86vw);
+  --env-ratio: 0.72; /* height / width */
+}
+
+@media (max-width: 480px) {
+  :root { --env-ratio: 0.8; }
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--burgundy-900);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  font-family: var(--font-serif);
+  color: var(--ink);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 25%, rgba(150, 30, 55, 0.55), transparent 70%),
+    radial-gradient(ellipse 90% 50% at 50% 120%, rgba(201, 163, 91, 0.14), transparent 60%),
+    linear-gradient(180deg, #45091a 0%, #2a0610 100%);
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 1.75rem 1.5rem;
+  overflow: hidden;
+}
+.stage > * { grid-area: 1 / 1; }
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  min-height: 44px;
+  padding: 0.85rem 1.35rem;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  font: 600 0.95rem/1 var(--font-serif);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.4s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { cursor: default; }
+
+.btn--small { padding: 0.65rem 1.1rem; font-size: 0.9rem; }
+
+.btn--primary {
+  background: linear-gradient(180deg, var(--burgundy-600), var(--burgundy-700));
+  color: var(--cream);
+  box-shadow: 0 4px 12px rgba(90, 16, 34, 0.35);
+}
+.btn--primary:hover { background: linear-gradient(180deg, #8a2038, var(--burgundy-600)); }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--burgundy-700);
+  border-color: var(--burgundy-600);
+}
+.btn--ghost:hover { background: rgba(122, 26, 48, 0.08); }
+
+/* =====================================================================
+   1. ENVELOPE SCENE
+   ===================================================================== */
+.scene {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.scene.is-leaving { opacity: 0; transform: scale(0.96) translateY(-10px); }
+
+.scene__title {
+  margin: 0 0 2.4rem;
+  max-width: 18em;
+  text-align: center;
+  font-family: var(--font-script);
+  font-size: clamp(1.55rem, 5.2vw, 2.15rem);
+  line-height: 1.3;
+  color: var(--blush);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.scene.is-open .scene__title { opacity: 0; transform: translateY(-8px); }
+
+.envelope-wrap {
+  position: relative;
+  width: var(--env-w);
+}
+
+.envelope {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / var(--env-ratio);
+  perspective: 1100px;
+}
+
+.env-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #45091a, #350714);
+  box-shadow: 0 26px 44px rgba(0, 0, 0, 0.5);
+}
+
+/* The letter peeking out of the envelope */
+.env-letter {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 0;
+  height: 88%;
+  z-index: 2;
+  border-radius: 4px 4px 2px 2px;
+  background: linear-gradient(180deg, #fbe4e4 0%, #f6d2d6 100%);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(-9%);
+  transition: transform 1s cubic-bezier(0.5, 0, 0.2, 1) 0.8s;
+}
+.env-letter::before {
+  content: "";
+  position: absolute;
+  left: 12%; right: 12%; top: 14px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.6;
+}
+.env-letter::after {
+  content: "";
+  position: absolute;
+  left: 12%; right: 12%; top: 30px;
+  height: 56px;
+  background: repeating-linear-gradient(to bottom, rgba(122, 26, 48, 0.2) 0 1.5px, transparent 1.5px 12px);
+}
+.scene.is-open .env-letter { transform: translateY(-52%); }
+
+/* Front of the envelope */
+.env-pocket {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 6px;
+  background: linear-gradient(165deg, #7c1b32 0%, #5b1124 60%, #4a0c1d 100%);
+  clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+}
+
+.env-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  fill: none;
+}
+.env-lines polyline {
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.env-lines .gold { stroke: var(--gold-soft); }
+
+/* The flap that opens */
+.env-flap {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%;
+  height: 55%;
+  z-index: 4;
+  transform-origin: 50% 0;
+  background: linear-gradient(180deg, #8d2139 0%, #6a1429 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
+              filter 0.9s ease 0.3s,
+              z-index 0s linear 0.75s;
+}
+.scene.is-open .env-flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+  filter: brightness(0.72);
+}
+
+.env-to {
+  position: absolute;
+  left: 0; right: 0;
+  top: 67%;
+  z-index: 5;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-script);
+  font-size: clamp(1rem, 3.6vw, 1.25rem);
+  line-height: 1;
+  color: #f2d9c4;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.scene.is-open .env-to { opacity: 0; }
+
+/* Wax seal */
+.seal {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  z-index: 6;
+  width: clamp(46px, 13vw, 58px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 48% 52% 50% 50% / 52% 48% 52% 48%;
+  background: radial-gradient(circle at 35% 30%, #e0405a 0%, #b3122e 45%, #7d0a1f 100%);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.45),
+              inset 0 -3px 5px rgba(0, 0, 0, 0.35),
+              inset 0 2px 3px rgba(255, 255, 255, 0.25);
+  transform: translate(-50%, -50%);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+.seal::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: inherit;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+}
+.seal svg {
+  width: 50%;
+  fill: #8e0f24;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.28));
+}
+.scene.is-open .seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1.25) rotate(14deg);
+}
+
+/* Open button (sits on the envelope) */
+.btn--open {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 5%;
+  z-index: 7;
+  width: max-content;
+  margin-inline: auto;
+  background: linear-gradient(180deg, #fbf3e6, #f0dcc0);
+  color: var(--burgundy-700);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  animation: invite 2.8s ease-in-out infinite;
+}
+.btn--open:hover { background: linear-gradient(180deg, #fffaf1, #f6e6cb); }
+.scene.is-open .btn--open {
+  opacity: 0;
+  pointer-events: none;
+  animation: none;
+}
+
+@keyframes invite {
+  0%, 100% { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 0 0 rgba(201, 163, 91, 0.55); }
+  50%      { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 0 9px rgba(201, 163, 91, 0); }
+}
+
+/* =====================================================================
+   ROSES
+   Every rose spot is a <div class="rose ..."> holding one <svg>.
+   TO USE YOUR OWN ROSE IMAGE: in index.html replace
+       <svg viewBox="0 0 200 200"><use href="#rose-art"/></svg>
+   with
+       <img src="rose.png" alt="">
+   (put rose.png next to index.html). A transparent PNG works best.
+   ===================================================================== */
+.rose {
+  position: absolute;
+  z-index: 5;
+  aspect-ratio: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.35));
+}
+.rose svg, .rose img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.rose--env-left  { left: -7%;  bottom: -14%; width: 27%; transform: rotate(-14deg); }
+.rose--env-right { right: -6%; bottom: -12%; width: 24%; transform: rotate(12deg); }
+.rose--env-top   { right: -3%; top: -12%;    width: 15%; transform: rotate(24deg); }
+.rose--env-topleft { left: -3%; top: -11%;   width: 14%; transform: rotate(-30deg); }
+.rose--env-bl2   { left: 15%;  bottom: -9%;  width: 14%; transform: rotate(20deg); }
+.rose--env-br2   { right: 16%; bottom: -8%;  width: 13%; transform: rotate(-18deg); }
+
+/* =====================================================================
+   2. OPENED CARD
+   ===================================================================== */
+.card-stage {
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.card-frame {
+  --rose: clamp(80px, 20vw, 124px);
+  position: relative;
+  width: min(560px, 100%);
+  max-height: calc(100vh - 3.5rem);
+  max-height: calc(100dvh - 3.5rem);
+  display: flex;
+  flex-direction: column;
+}
+.card-frame::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  z-index: 2;
+  border: 1px solid var(--gold-soft);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.card-stage.is-visible .card-frame {
+  animation: card-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(26px) scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+.card {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold) transparent;
+  padding: clamp(2.2rem, 6vw, 3rem) clamp(1.6rem, 6vw, 3rem) clamp(4.2rem, 12vw, 5rem);
+  border: 1px solid var(--gold);
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.55), transparent 60%),
+    linear-gradient(180deg, var(--cream), var(--cream-deep));
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55), 0 0 0 6px rgba(201, 163, 91, 0.12);
+}
+.card:focus-visible { outline-offset: -6px; }
+
+.rose--card-tr {
+  z-index: 3;
+  width: var(--rose);
+  top: calc(var(--rose) * -0.3);
+  right: calc(var(--rose) * -0.26);
+  transform: rotate(15deg);
+}
+.rose--card-bl {
+  z-index: 3;
+  width: var(--rose);
+  bottom: calc(var(--rose) * -0.3);
+  left: calc(var(--rose) * -0.26);
+  transform: rotate(-165deg);
+}
+
+.rose--card-br {
+  z-index: 3;
+  width: calc(var(--rose) * 0.85);
+  bottom: calc(var(--rose) * -0.26);
+  right: calc(var(--rose) * -0.22);
+  transform: rotate(160deg);
+}
+.rose--card-tl {
+  z-index: 3;
+  width: calc(var(--rose) * 0.55);
+  top: calc(var(--rose) * -0.2);
+  left: calc(var(--rose) * -0.2);
+  transform: rotate(-35deg);
+}
+.rose--card-bl2 {
+  z-index: 3;
+  width: calc(var(--rose) * 0.6);
+  bottom: calc(var(--rose) * -0.2);
+  left: calc(var(--rose) * 0.55);
+  transform: rotate(-110deg);
+}
+
+/* ---------- The letter ---------- */
+.letter p {
+  margin: 0 0 1.05em;
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 2.6vw, 1.12rem);
+  line-height: 1.78;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.letter .letter__greeting {
+  margin: 0 0 0.6em;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(2rem, 7vw, 2.7rem);
+  line-height: 1.1;
+  color: var(--burgundy-700);
+}
+.letter .letter__greeting:focus { outline: none; }
+.letter .letter__closing { font-style: italic; color: var(--burgundy-700); }
+.letter .letter__signoff { margin: 1.4em 0 0; }
+.letter__signature {
+  display: inline-block;
+  margin-top: 0.15em;
+  font-family: var(--font-script);
+  font-size: clamp(1.7rem, 6vw, 2.2rem);
+  line-height: 1.2;
+  color: var(--burgundy-700);
+}
+
+.ornament {
+  position: relative;
+  width: 60%;
+  height: 1px;
+  margin: 1.8rem auto 1.1rem;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  overflow: visible;
+}
+.ornament::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 7px; height: 7px;
+  background: var(--gold);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.caption {
+  max-width: 32ch;
+  margin: 0 auto;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #7a4a52;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.6rem;
+}
+
+.more-love { margin-top: 1.25rem; }
+.more-love__text {
+  margin: 0;
+  padding: 1rem 1.15rem;
+  text-align: center;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--burgundy-700);
+  background: rgba(179, 18, 46, 0.06);
+  border: 1px solid var(--gold-soft);
+  border-radius: 12px;
+  animation: soft-in 0.9s ease both;
+}
+@keyframes soft-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Letter reveal (runs on open and on "Read My Letter Again") */
+.card.is-revealing .reveal {
+  animation: letter-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 130ms);
+}
+@keyframes letter-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* =====================================================================
+   3. CARD CLOSED — ROSES COME FORWARD
+   ===================================================================== */
+.card-stage.is-closing .card-frame {
+  animation: card-out 0.65s cubic-bezier(0.5, 0, 0.7, 0.4) both;
+}
+@keyframes card-out {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(18px) scale(0.9); }
+}
+
+.rose-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  text-align: center;
+}
+.bouquet {
+  position: relative;
+  width: min(380px, 80vw);
+  aspect-ratio: 1;
+}
+.bouquet .rose { transform: rotate(var(--rot, 0deg)); }
+.rose--b-center { left: 26%; top: 20%; width: 48%; }
+.rose--b-l      { left: 0;   top: 36%; width: 37%; }
+.rose--b-r      { right: 0;  top: 36%; width: 37%; }
+.rose--b-tl     { left: 13%; top: 2%;  width: 33%; }
+.rose--b-tr     { right: 13%; top: 2%; width: 33%; }
+.rose--b-bottom { left: 36%; bottom: 0; width: 28%; }
+
+.rose-stage.is-visible .bouquet .rose {
+  animation: rose-forward 1.3s cubic-bezier(0.2, 0.9, 0.25, 1.1) both;
+  animation-delay: calc(var(--k, 0) * 140ms);
+}
+@keyframes rose-forward {
+  from {
+    opacity: 0;
+    transform: translateY(46px) scale(0.2) rotate(var(--rot, 0deg));
+    filter: blur(6px) drop-shadow(0 6px 8px rgba(0, 0, 0, 0.35));
+  }
+  60% { opacity: 1; }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(var(--rot, 0deg));
+    filter: blur(0) drop-shadow(0 8px 10px rgba(0, 0, 0, 0.4));
+  }
+}
+
+.rose-stage__text {
+  margin: 0;
+  max-width: 20em;
+  font-family: var(--font-script);
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  line-height: 1.3;
+  color: var(--blush);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+}
+.rose-stage__text:focus { outline: none; }
+.rose-stage.is-visible .rose-stage__text,
+.rose-stage.is-visible .btn {
+  animation: soft-in 0.9s ease 1s both;
+}
+
+/* =====================================================================
+   PETALS & HEARTS
+   ===================================================================== */
+.petal-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.petal-layer--ambient { z-index: 0; }
+.petal-layer--burst   { z-index: 30; }
+
+.petal {
+  position: absolute;
+  top: -30px;
+  left: var(--x);
+  width: var(--size);
+  height: calc(var(--size) * 1.25);
+  will-change: transform;
+  animation: petal-fall var(--dur) linear var(--delay) var(--iter, infinite) both;
+}
+.petal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 100% 0 100% 0;
+  background: radial-gradient(circle at 30% 25%, #f7a8b4 0%, #d63a56 55%, #9c0f2b 100%);
+  opacity: 0.9;
+  animation: petal-sway var(--sway, 3.2s) ease-in-out infinite alternate;
+}
+@keyframes petal-fall {
+  0%   { opacity: 0; transform: translate3d(0, 0, 0) rotate(0deg); }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(var(--drift), 112vh, 0) rotate(var(--spin)); }
+}
+@keyframes petal-sway {
+  from { transform: translateX(-10px) rotate(-28deg); }
+  to   { transform: translateX(10px) rotate(28deg); }
+}
+
+.hearts-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  overflow: hidden;
+}
+.heart-float {
+  position: fixed;
+  font-size: var(--size);
+  line-height: 1;
+  color: var(--rose-red);
+  text-shadow: 0 2px 6px rgba(179, 18, 46, 0.35);
+  opacity: 0;
+  animation: heart-rise 2.4s ease-out var(--delay, 0s) forwards;
+}
+@keyframes heart-rise {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  15%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), calc(var(--rise) * -1)) scale(1.15) rotate(var(--rot)); }
+}
+
+/* =====================================================================
+   REDUCED MOTION
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+  .petal, .heart-float { display: none !important; }
+}
